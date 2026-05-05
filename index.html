@@ -21,7 +21,7 @@
   --gold:    #B8965F;
   --radius:  18px;
   --shadow:  0 1px 2px rgba(28,27,25,.04), 0 8px 28px rgba(28,27,25,.045);
-  --serif:   "Palatino Linotype","Palatino","Book Antiqua","Garamond",Georgia,serif;
+  --serif:   "Cormorant Garamond","Playfair Display","Didot","Garamond",Georgia,"Times New Roman",serif;
   --sans:    -apple-system,BlinkMacSystemFont,"Inter","Segoe UI","Helvetica Neue",system-ui,sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,7 +55,7 @@ body {
   border:1px solid var(--line); border-radius:999px;
   background:var(--card); display:inline-flex; align-items:center;
 }
-.pill-tag .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--sage); margin-right:8px; }
+.pill-tag .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--sage); margin-right:8px; vertical-align:middle; }
 
 /* ── HERO ── */
 .hero {
@@ -74,7 +74,7 @@ body {
   pointer-events:none;
 }
 .eyebrow { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-2); margin-bottom:18px; font-weight:500; }
-.hero-title { font-family:var(--serif); font-weight:400; font-size:46px; line-height:1.05; letter-spacing:-.012em; margin-bottom:22px; }
+.hero-title { font-family:var(--serif); font-weight:400; font-size:46px; line-height:1.05; letter-spacing:-0.012em; margin-bottom:22px; color:var(--ink); }
 .hero-title em { font-style:italic; color:var(--gold); }
 .quote { font-family:var(--serif); font-style:italic; font-size:18px; color:var(--ink-2); max-width:540px; line-height:1.55; padding-left:18px; border-left:2px solid var(--soft); white-space:pre-line; }
 .quote-by { display:block; margin-top:12px; font-size:10px; font-style:normal; color:var(--ink-3); letter-spacing:.18em; text-transform:uppercase; font-weight:500; }
@@ -86,7 +86,7 @@ body {
 .ring-fill  { fill:none; stroke:var(--accent); stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1); }
 .ring-label { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
 .ring-label .pct { font-family:var(--serif); font-size:52px; font-weight:400; line-height:1; letter-spacing:-.02em; }
-.ring-label .pct sup { font-size:16px; color:var(--ink-3); top:-.9em; position:relative; }
+.ring-label .pct sup { font-size:16px; color:var(--ink-3); margin-left:1px; top:-0.9em; }
 .ring-label .caption { font-size:10px; color:var(--ink-2); letter-spacing:.16em; text-transform:uppercase; margin-top:6px; font-weight:500; }
 .ring-label .detail  { font-size:11px; color:var(--ink-3); margin-top:4px; }
 
