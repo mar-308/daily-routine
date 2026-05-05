@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Routine</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg:      #F5F2EB;
+  --bg-soft: #EFEBE0;
+  --card:    #FFFFFF;
+  --ink:     #1C1B19;
+  --ink-2:   #6B6760;
+  --ink-3:   #ABA69B;
+  --line:    #E8E2D3;
+  --line-2:  #F0EBDD;
+  --soft:    #E6DBC4;
+  --accent:  #2B2A27;
+  --sage:    #8E9E88;
+  --gold:    #B8965F;
+  --radius:  18px;
+  --shadow:  0 1px 2px rgba(28,27,25,.04), 0 8px 28px rgba(28,27,25,.045);
+  --serif:   "Palatino Linotype","Palatino","Book Antiqua","Garamond",Georgia,serif;
+  --sans:    -apple-system,BlinkMacSystemFont,"Inter","Segoe UI","Helvetica Neue",system-ui,sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.app { max-width: 1180px; margin: 0 auto; padding: 36px 28px 80px; }
+
+/* ── TOPBAR ── */
+.topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
+.brand  { display:flex; align-items:center; gap:12px; }
+.brand-mark {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--bg); font-family:var(--serif);
+  font-size:14px; font-weight:500; font-style:italic;
+}
+.brand-name { font-family:var(--serif); font-size:20px; letter-spacing:-.005em; font-weight:500; }
+.brand-name em { font-style:italic; color:var(--ink-2); font-weight:400; margin-left:6px; }
+.pill-tag {
+  font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--ink-2); padding:6px 12px;
+  border:1px solid var(--line); border-radius:999px;
+  background:var(--card); display:inline-flex; align-items:center;
+}
+.pill-tag .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--sage); margin-right:8px; }
+
+/* ── HERO ── */
+.hero {
+  background:linear-gradient(180deg,#FFF 0%,#FDFCF7 100%);
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:44px 48px;
+  display:grid; grid-template-columns:1fr 220px;
+  gap:40px; align-items:center;
+  margin-bottom:20px; box-shadow:var(--shadow);
+  position:relative; overflow:hidden;
+}
+.hero::before {
+  content:""; position:absolute; top:-40px; right:-40px;
+  width:220px; height:220px; border-radius:50%;
+  background:radial-gradient(circle at center,rgba(214,180,172,.18),transparent 70%);
+  pointer-events:none;
+}
+.eyebrow { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-2); margin-bottom:18px; font-weight:500; }
+.hero-title { font-family:var(--serif); font-weight:400; font-size:46px; line-height:1.05; letter-spacing:-.012em; margin-bottom:22px; }
+.hero-title em { font-style:italic; color:var(--gold); }
+.quote { font-family:var(--serif); font-style:italic; font-size:18px; color:var(--ink-2); max-width:540px; line-height:1.55; padding-left:18px; border-left:2px solid var(--soft); white-space:pre-line; }
+.quote-by { display:block; margin-top:12px; font-size:10px; font-style:normal; color:var(--ink-3); letter-spacing:.18em; text-transform:uppercase; font-weight:500; }
+
+/* ring */
+.ring-wrap { width:200px; height:200px; position:relative; margin-left:auto; flex-shrink:0; }
+.ring-wrap svg { width:100%; height:100%; transform:rotate(-90deg); }
+.ring-track { fill:none; stroke:var(--line-2); stroke-width:6; }
+.ring-fill  { fill:none; stroke:var(--accent); stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1); }
+.ring-label { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.ring-label .pct { font-family:var(--serif); font-size:52px; font-weight:400; line-height:1; letter-spacing:-.02em; }
+.ring-label .pct sup { font-size:16px; color:var(--ink-3); top:-.9em; position:relative; }
+.ring-label .caption { font-size:10px; color:var(--ink-2); letter-spacing:.16em; text-transform:uppercase; margin-top:6px; font-weight:500; }
+.ring-label .detail  { font-size:11px; color:var(--ink-3); margin-top:4px; }
+
+/* ── STATS ── */
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:44px; }
+.stat { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px 20px; }
+.stat .label { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-2); margin-bottom:12px; font-weight:500; }
+.stat .value { font-family:var(--serif); font-size:40px; font-weight:400; line-height:1; color:var(--ink); letter-spacing:-.015em; display:flex; align-items:baseline; gap:4px; }
+.stat .value small { font-family:var(--sans); font-size:12px; color:var(--ink-3); letter-spacing:.02em; font-weight:400; }
+.stat .meta { margin-top:10px; font-size:11px; color:var(--ink-2); }
+
+/* ── SECTIONS ── */
+.section { margin-bottom:40px; }
+.section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px; padding:0 4px; }
+.section-title { font-family:var(--serif); font-size:26px; font-weight:500; letter-spacing:-.008em; }
+.section-title em { font-style:italic; color:var(--ink-2); font-weight:400; }
+.section-hint { font-size:12px; color:var(--ink-2); }
+
+/* ── HABIT TILES ── */
+.checklist { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; align-items:start; }
+
+.habit {
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:18px 18px 16px;
+  cursor:pointer;
+  transition:transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s, background .25s, color .25s, border-color .25s;
+  user-select:none;
+}
+.habit:hover { transform:translateY(-2px); border-color:var(--soft); box-shadow:var(--shadow); }
+.habit.done  { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+
+.habit-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.habit-emoji { font-size:20px; line-height:1; }
+.habit-check {
+  width:22px; height:22px; border-radius:50%;
+  border:1.5px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; transition:all .25s ease; flex-shrink:0;
+}
+.habit.done .habit-check { background:var(--bg); border-color:var(--bg); }
+.habit-check svg { width:11px; height:11px; opacity:0; transition:opacity .2s; }
+.habit.done .habit-check svg { opacity:1; stroke:var(--accent); }
+
+.habit-label { font-size:13.5px; font-weight:500; letter-spacing:-.001em; line-height:1.3; }
+.habit-meta  { margin-top:6px; font-size:10.5px; color:var(--ink-3); }
+.habit.done .habit-meta { color:rgba(245,242,235,.5); }
+.time-chip   { font-weight:600; color:var(--gold); font-variant-numeric:tabular-nums; }
+.habit.done .time-chip { color:rgba(245,242,235,.6); }
+
+/* ── EXPAND TOGGLE ── */
+.habit-expand {
+  display:flex; align-items:center; gap:5px;
+  margin-top:12px; padding-top:10px;
+  border-top:1px solid var(--line-2);
+  font-size:10.5px; color:var(--ink-3);
+  cursor:pointer; transition:color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.habit-expand:hover { color:var(--ink-2); }
+.habit.done .habit-expand { border-top-color:rgba(255,255,255,.12); color:rgba(245,242,235,.4); }
+.habit.done .habit-expand:hover { color:rgba(245,242,235,.65); }
+.expand-arrow { font-size:9px; }
+
+/* ── SUB-ITEMS ── */
+.habit-subs { margin-top:8px; }
+.sub-row {
+  display:flex; align-items:center; gap:9px;
+  padding:7px 0;
+  border-top:1px solid rgba(0,0,0,.05);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity .15s;
+}
+.sub-row:first-child { border-top:none; }
+.habit.done .sub-row { border-top-color:rgba(255,255,255,.08); }
+
+.sub-emoji-sm {
+  font-size:13px; width:24px; height:24px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.04); flex-shrink:0;
+  transition:opacity .2s;
+}
+.habit.done .sub-emoji-sm { background:rgba(255,255,255,.1); }
+.sub-row.sub-done .sub-emoji-sm { opacity:.4; }
+
+.sub-label {
+  font-size:12px; color:var(--ink-2); flex:1;
+  transition:color .15s;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.habit.done .sub-label { color:rgba(245,242,235,.65); }
+.sub-row.sub-done .sub-label { text-decoration:line-through; color:var(--ink-3); }
+.habit.done .sub-row.sub-done .sub-label { color:rgba(245,242,235,.35); }
+
+.sub-cb {
+  width:16px; height:16px; border-radius:50%;
+  border:1.5px solid var(--line); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; transition:all .15s;
+}
+.habit.done .sub-cb { border-color:rgba(255,255,255,.3); background:rgba(255,255,255,.1); }
+.sub-row.sub-done .sub-cb { background:var(--accent); border-color:var(--accent); }
+.habit.done .sub-row.sub-done .sub-cb { background:var(--bg); border-color:var(--bg); }
+.sub-ck {
+  display:none; width:4px; height:6px;
+  border:1.5px solid #fff; border-top:none; border-left:none;
+  transform:rotate(45deg) translateY(-1px);
+}
+.sub-row.sub-done .sub-ck { display:block; }
+.habit.done .sub-row.sub-done .sub-ck { border-color:var(--accent); }
+
+/* ── STREAKS ── */
+.card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:26px 28px; }
+.card-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; }
+.card-title { font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:-.005em; }
+.card-title em { font-style:italic; color:var(--ink-2); font-weight:400; }
+.card-sub { font-size:11px; color:var(--ink-3); letter-spacing:.08em; text-transform:uppercase; }
+.streaks { display:grid; grid-template-columns:repeat(2,1fr); column-gap:36px; }
+.streak-row { display:grid; grid-template-columns:26px 1fr 1.1fr 70px; align-items:center; padding:14px 0; border-top:1px solid var(--line-2); gap:18px; }
+.streak-row:first-child,.streak-row:nth-child(2) { border-top:none; padding-top:6px; }
+.streak-emoji { font-size:17px; }
+.streak-name  { font-size:13.5px; font-weight:500; }
+.streak-bar   { position:relative; height:5px; background:var(--line-2); border-radius:3px; overflow:hidden; }
+.streak-bar-fill { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,var(--accent),#4B4843); border-radius:3px; transition:width 1s cubic-bezier(.4,0,.2,1); }
+.streak-number { font-family:var(--serif); font-size:24px; text-align:right; letter-spacing:-.01em; line-height:1; }
+.streak-number small { font-family:var(--sans); font-size:10px; color:var(--ink-3); letter-spacing:.12em; text-transform:uppercase; margin-left:3px; font-weight:500; }
+
+/* ── FOOTER ── */
+.foot { margin-top:44px; padding-top:24px; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; color:var(--ink-3); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+.reset-link { background:none; border:none; font:inherit; color:inherit; cursor:pointer; letter-spacing:inherit; text-transform:inherit; text-decoration:underline; text-underline-offset:3px; padding:0; }
+.reset-link:hover { color:var(--ink-2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  .app { padding:24px 18px 60px; }
+  .hero { grid-template-columns:1fr; padding:32px 28px; gap:28px; }
+  .ring-wrap { margin:0 auto; }
+  .hero-title { font-size:36px; }
+  .stats { grid-template-columns:repeat(2,1fr); }
+  .checklist { grid-template-columns:repeat(3,1fr); }
+  .streaks { grid-template-columns:1fr; }
+  .streak-row:nth-child(2) { border-top:1px solid var(--line-2); padding-top:14px; }
+  .streak-row { grid-template-columns:22px 1fr 60px; }
+  .streak-row .streak-bar { display:none; }
+}
+@media (max-width:600px) {
+  .checklist { grid-template-columns:repeat(2,1fr); }
+  .stats { grid-template-columns:repeat(2,1fr); }
+  .hero { padding:28px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">m</div>
+      <div class="brand-name">Daily Routine <em>2026</em></div>
+    </div>
+    <div class="pill-tag"><span class="dot"></span>Saved locally</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow" id="heroDate"></div>
+      <h1 class="hero-title">Good morning,<br><em>Mariana.</em></h1>
+      <div class="quote" id="quoteText"></div>
+      <span class="quote-by" id="quoteBy"></span>
+    </div>
+    <div class="ring-wrap">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ring-track" cx="60" cy="60" r="52"/>
+        <circle id="ringFill" class="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+      </svg>
+      <div class="ring-label">
+        <div class="pct"><span id="ringPct">0</span><sup>%</sup></div>
+        <div class="caption">Today</div>
+        <div class="detail" id="ringDetail">0 of 17</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Morning complete</div>
+      <div class="value" id="statMorning">—</div>
+      <div class="meta">of 6 items</div>
+    </div>
+    <div class="stat">
+      <div class="label">Night complete</div>
+      <div class="value" id="statNight">—</div>
+      <div class="meta">of 3 items</div>
+    </div>
+    <div class="stat">
+      <div class="label">Sub-habits done</div>
+      <div class="value" id="statSubs">—</div>
+      <div class="meta">of 8 inside toggles</div>
+    </div>
+    <div class="stat">
+      <div class="label">Days tracked</div>
+      <div class="value" id="statDays">—</div>
+      <div class="meta" id="statDaysMeta">keep it up</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2 class="section-title">Morning <em>routine</em></h2>
+      <span class="section-hint">Tap to check off · saved on this device</span>
+    </div>
+    <div class="checklist" id="morningChecklist"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2 class="section-title">Night <em>routine</em></h2>
+      <span class="section-hint">Wind down</span>
+    </div>
+    <div class="checklist" id="nightChecklist"></div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Streaks, <em>by habit</em></div>
+        <div class="card-sub" id="streakMonth"></div>
+      </div>
+      <div class="streaks" id="streaksEl"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span id="footLabel"></span>
+    <button class="reset-link" onclick="resetDay()">Reset today</button>
+  </div>
+
+</div>
+<script>
+/* ── DATA ── */
+const MORNING = [
+  { id:'m1', name:'Wake Up & Pray', time:'6:30', emoji:'🙏',
+    subs:[ {id:'m2', name:'Vitamins', emoji:'💊'} ]
+  },
+  { id:'m3', name:'Go Downstairs', time:'6:50', emoji:'🌅',
+    subs:[
+      {id:'m4', name:'Benji',      emoji:'🐶'},
+      {id:'m5', name:'Coffee',     emoji:'☕'},
+      {id:'m6', name:'Journaling', emoji:'📓'},
+    ]
+  },
+  { id:'m7',  name:'Get Ready',    time:'7:10', emoji:'✨'  },
+  { id:'m8',  name:'Walk',         time:'7:30', emoji:'🚶‍♀️' },
+  { id:'m9',  name:'Gym',          time:'7:40', emoji:'💪'  },
+  { id:'m10', name:'Walk & Slack', time:'8:00', emoji:'📱'  },
+];
+
+const NIGHT = [
+  { id:'n1', name:'Feed Benji', emoji:'🐶' },  /* standalone — no toggle */
+  { id:'n2', name:'Draw Bath',  time:'9:00', emoji:'🛁',
+    subs:[
+      {id:'n3', name:'Leave workout clothes ready', emoji:'👟'},
+      {id:'n4', name:'Remove makeup',               emoji:'🌸'},
+    ]
+  },
+  { id:'n5', name:'Take Bath', time:'9:20', emoji:'🫧',
+    subs:[
+      {id:'n6', name:'Skincare',      emoji:'🧴'},
+      {id:'n7', name:'Rosacea Pills', emoji:'💊'},
+    ]
+  },
+];
+
+const QUOTES = [
+  { text:'you do not just wake up and\nbecome the butterfly —\ngrowth is a process.',         book:'home body' },
+  { text:'how you love yourself is\nhow you teach others\nto love you.',                       book:'milk and honey' },
+  { text:'fall in love with\nyour solitude.',                                                  book:'the sun and her flowers' },
+  { text:'loneliness is a sign you are\nin desperate need\nof yourself.',                      book:'milk and honey' },
+  { text:'you have to stop searching\nfor why at some point\nyou have to leave it alone.',     book:'the sun and her flowers' },
+  { text:'what is stronger\nthan the human heart\nwhich shatters over and over\nand still lives.', book:'the sun and her flowers' },
+];
+
+const ALL_PARENTS = [...MORNING, ...NIGHT];
+const ALL_SUBS    = ALL_PARENTS.flatMap(p => p.subs || []);
+const ALL_ITEMS   = [...ALL_PARENTS, ...ALL_SUBS];
+
+/* ── STATE ── */
+function todayKey()   { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function storeKey()   { return `routine-${todayKey()}`; }
+function historyKey() { return `routine-history`; }
+function loadState()  { try { return JSON.parse(localStorage.getItem(storeKey()))  || {}; } catch { return {}; } }
+function loadHistory(){ try { return JSON.parse(localStorage.getItem(historyKey()))|| {}; } catch { return {}; } }
+function saveState()  {
+  localStorage.setItem(storeKey(), JSON.stringify(state));
+  const h = loadHistory(); h[todayKey()] = state; localStorage.setItem(historyKey(), JSON.stringify(h));
+}
+
+let state    = loadState();
+let expanded = new Set();
+
+/* ── STREAK ── */
+function calcStreak(id) {
+  if (!state[id]) return 0;
+  const hist = loadHistory(); let s = 1;
+  const d = new Date(); d.setDate(d.getDate()-1);
+  for (let i=0; i<365; i++) {
+    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (hist[k]?.[id]) { s++; d.setDate(d.getDate()-1); } else break;
+  }
+  return s;
+}
+
+/* ── HELPERS ── */
+function checkSVG() {
+  return '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.8 12 13 4.5"/></svg>';
+}
+function expandLabel(subs) {
+  return subs.length === 1 ? subs[0].name : `${subs.length} items`;
+}
+
+/* ── BUILD TILE ── */
+function buildHabit(item) {
+  const done       = !!state[item.id];
+  const subs       = item.subs || [];
+  const isExpanded = expanded.has(item.id);
+  const streak     = calcStreak(item.id);
+
+  const div = document.createElement('div');
+  div.className = 'habit' + (done ? ' done' : '');
+
+  /* meta line */
+  let metaHTML = '';
+  if (item.time) metaHTML += `<span class="time-chip">${item.time}</span>`;
+  else           metaHTML += `<span class="flame">✦</span> ${streak} day${streak===1?'':'s'}`;
+
+  /* sub-items html */
+  let subsHTML = '';
+  if (subs.length) {
+    const subRows = subs.map(s => {
+      const sd = !!state[s.id];
+      return `
+        <div class="sub-row${sd?' sub-done':''}" onclick="toggleSub('${s.id}',event)">
+          <span class="sub-emoji-sm">${s.emoji}</span>
+          <span class="sub-label">${s.name}</span>
+          <span class="sub-cb"><span class="sub-ck"></span></span>
+        </div>`;
+    }).join('');
+
+    subsHTML = `
+      <div class="habit-expand" onclick="toggleExpand('${item.id}',event)">
+        <span class="expand-arrow">${isExpanded?'▾':'▸'}</span>
+        <span>${isExpanded ? 'collapse' : expandLabel(subs)}</span>
+      </div>
+      <div class="habit-subs" style="display:${isExpanded?'block':'none'}">${subRows}</div>`;
+  }
+
+  div.innerHTML = `
+    <div class="habit-top">
+      <span class="habit-emoji">${item.emoji}</span>
+      <span class="habit-check">${checkSVG()}</span>
+    </div>
+    <div class="habit-label">${item.name}</div>
+    <div class="habit-meta">${metaHTML}</div>
+    ${subsHTML}`;
+
+  div.addEventListener('click', () => toggle(item.id));
+  return div;
+}
+
+/* ── INTERACTIONS ── */
+function toggle(id) {
+  state[id] = !state[id]; saveState(); renderAll();
+}
+function toggleSub(id, e) {
+  e.stopPropagation(); state[id] = !state[id]; saveState(); renderAll();
+}
+function toggleExpand(id, e) {
+  e.stopPropagation();
+  if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
+  renderAll();
+}
+function resetDay() { state={}; saveState(); renderAll(); }
+
+/* ── RENDER ── */
+function renderChecklist(items, elId) {
+  const el = document.getElementById(elId); el.innerHTML='';
+  items.forEach(i => el.appendChild(buildHabit(i)));
+}
+
+function renderStats() {
+  const mDone    = MORNING.filter(i => state[i.id]).length;
+  const nDone    = NIGHT.filter(i   => state[i.id]).length;
+  const subsDone = ALL_SUBS.filter(i => state[i.id]).length;
+  const total    = ALL_ITEMS.length;
+  const done     = ALL_ITEMS.filter(i => state[i.id]).length;
+  const pct      = Math.round(done/total*100);
+  const C        = 326.7;
+
+  document.getElementById('ringFill').style.strokeDashoffset = C*(1-pct/100);
+  document.getElementById('ringPct').textContent    = pct;
+  document.getElementById('ringDetail').textContent = `${done} of ${total}`;
+
+  document.getElementById('statMorning').innerHTML = `${mDone}<small>/${MORNING.length}</small>`;
+  document.getElementById('statNight').innerHTML   = `${nDone}<small>/${NIGHT.length}</small>`;
+  document.getElementById('statSubs').innerHTML    = `${subsDone}<small>/${ALL_SUBS.length}</small>`;
+
+  const hist = loadHistory();
+  const days = Object.keys(hist).length || 1;
+  document.getElementById('statDays').innerHTML    = `${days}<small> day${days===1?'':'s'}</small>`;
+  document.getElementById('statDaysMeta').textContent = days===1 ? 'first day — keep going' : 'building the habit';
+}
+
+function renderStreaks() {
+  const el   = document.getElementById('streaksEl');
+  const rows = ALL_PARENTS.map(i => ({i, s:calcStreak(i.id)})).sort((a,b)=>b.s-a.s);
+  const max  = Math.max(...rows.map(r=>r.s), 1);
+  el.innerHTML = rows.map(r=>`
+    <div class="streak-row">
+      <span class="streak-emoji">${r.i.emoji}</span>
+      <span class="streak-name">${r.i.name}</span>
+      <div class="streak-bar"><div class="streak-bar-fill" style="width:${(r.s/max)*100}%"></div></div>
+      <div class="streak-number">${r.s}<small>days</small></div>
+    </div>`).join('');
+}
+
+function renderAll() {
+  renderChecklist(MORNING, 'morningChecklist');
+  renderChecklist(NIGHT,   'nightChecklist');
+  renderStats();
+  renderStreaks();
+}
+
+/* ── INIT ── */
+function setDates() {
+  const d      = new Date();
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const str    = `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+  document.getElementById('heroDate').textContent  = str;
+  document.getElementById('footLabel').textContent = `Daily Routine · ${str}`;
+  document.getElementById('streakMonth').textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function setQuote() {
+  const q = QUOTES[new Date().getDay() % QUOTES.length];
+  document.getElementById('quoteText').textContent = q.text;
+  document.getElementById('quoteBy').textContent   = `— rupi kaur, ${q.book}`;
+}
+
+setDates();
+setQuote();
+renderAll();
+</script>
+</body>
+</html>
