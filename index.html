@@ -91,7 +91,7 @@ body {
 .ring-label .detail  { font-size:11px; color:var(--ink-3); margin-top:4px; }
 
 /* ── STATS ── */
-.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:44px; }
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
 .stat { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px 20px; }
 .stat .label { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-2); margin-bottom:12px; font-weight:500; }
 .stat .value { font-family:var(--serif); font-size:40px; font-weight:400; line-height:1; color:var(--ink); letter-spacing:-.015em; display:flex; align-items:baseline; gap:4px; }
@@ -272,29 +272,6 @@ body {
     </div>
   </div>
 
-  <div class="stats">
-    <div class="stat">
-      <div class="label">Morning complete</div>
-      <div class="value" id="statMorning">—</div>
-      <div class="meta">of 6 items</div>
-    </div>
-    <div class="stat">
-      <div class="label">Night complete</div>
-      <div class="value" id="statNight">—</div>
-      <div class="meta">of 3 items</div>
-    </div>
-    <div class="stat">
-      <div class="label">Sub-habits done</div>
-      <div class="value" id="statSubs">—</div>
-      <div class="meta">of 8 inside toggles</div>
-    </div>
-    <div class="stat">
-      <div class="label">Days tracked</div>
-      <div class="value" id="statDays">—</div>
-      <div class="meta" id="statDaysMeta">keep it up</div>
-    </div>
-  </div>
-
   <div class="section">
     <div class="section-head">
       <h2 class="section-title">Morning <em>routine</em></h2>
@@ -309,6 +286,29 @@ body {
       <span class="section-hint">Wind down</span>
     </div>
     <div class="checklist" id="nightChecklist"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Morning complete</div>
+      <div class="value" id="statMorning">—</div>
+      <div class="meta">of 6 items</div>
+    </div>
+    <div class="stat">
+      <div class="label">Night complete</div>
+      <div class="value" id="statNight">—</div>
+      <div class="meta">of 4 items</div>
+    </div>
+    <div class="stat">
+      <div class="label">Sub-habits done</div>
+      <div class="value" id="statSubs">—</div>
+      <div class="meta">of 8 inside toggles</div>
+    </div>
+    <div class="stat">
+      <div class="label">Days tracked</div>
+      <div class="value" id="statDays">—</div>
+      <div class="meta" id="statDaysMeta">keep it up</div>
+    </div>
   </div>
 
   <div class="section">
@@ -347,6 +347,7 @@ const MORNING = [
 ];
 
 const NIGHT = [
+  { id:'n0', name:'Mindfulness', emoji:'🧘‍♀️' },
   { id:'n1', name:'Feed Benji', emoji:'🐶' },  /* standalone — no toggle */
   { id:'n2', name:'Draw Bath',  time:'9:00', emoji:'🛁',
     subs:[
