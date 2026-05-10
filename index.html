@@ -379,7 +379,11 @@ const TRACKED = [
   { id:'n6', name:'Skincare',          emoji:'🧴' },
 ];
 
-const WEEKEND_HIDDEN = new Set(['m9', 'm10']);
+const WEEKEND_HIDDEN = new Set(['m9', 'm10', 'n2', 'n5']);
+const WEEKEND_NIGHT_EXTRAS = [
+  { id:'n6', name:'Skincare',      emoji:'🧴' },
+  { id:'n7', name:'Rosacea Pills', emoji:'💊' },
+];
 
 const ALL_PARENTS = [...MORNING, ...NIGHT];
 const ALL_SUBS    = ALL_PARENTS.flatMap(p => p.subs || []);
@@ -510,7 +514,7 @@ function visibleItems() {
   if (!weekendMode) return ALL_ITEMS;
   const parents = ALL_PARENTS.filter(p => !WEEKEND_HIDDEN.has(p.id));
   const subs    = parents.flatMap(p => p.subs || []);
-  return [...parents, ...subs];
+  return [...parents, ...subs, ...WEEKEND_NIGHT_EXTRAS];
 }
 
 function renderStats() {
@@ -564,8 +568,11 @@ function renderWeekTracker() {
 
 function renderAll() {
   const morning = weekendMode ? MORNING.filter(h => !WEEKEND_HIDDEN.has(h.id)) : MORNING;
+  const night   = weekendMode
+    ? [...NIGHT.filter(h => !WEEKEND_HIDDEN.has(h.id)), ...WEEKEND_NIGHT_EXTRAS]
+    : NIGHT;
   renderChecklist(morning, 'morningChecklist');
-  renderChecklist(NIGHT,   'nightChecklist');
+  renderChecklist(night,   'nightChecklist');
   renderStats();
   renderStreaks();
   renderWeekTracker();
