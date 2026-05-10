@@ -110,7 +110,14 @@ body {
   user-select:none;
 }
 .habit:hover { transform:translateY(-2px); border-color:var(--soft); box-shadow:var(--shadow); }
-.habit.done  { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+.habit.done    { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+.habit.partial { background:#C4A97E; border-color:#C4A97E; }
+.habit.partial .habit-meta { color:rgba(28,27,25,.5); }
+.habit.partial .time-chip  { color:rgba(28,27,25,.65); }
+.habit.partial .habit-check { background:rgba(255,255,255,.4); border-color:rgba(255,255,255,.5); }
+.habit.partial .habit-check svg { opacity:1; stroke:var(--ink); }
+.habit.partial .habit-expand { border-top-color:rgba(0,0,0,.1); color:rgba(28,27,25,.45); }
+.habit.partial .habit-expand:hover { color:rgba(28,27,25,.65); }
 
 .habit-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
 .habit-emoji { font-size:20px; line-height:1; }
@@ -225,6 +232,8 @@ body {
   background:var(--line);
 }
 .tracker-dot.done { background:var(--accent); }
+.tracker-dot.past { cursor:pointer; transition:opacity .15s; }
+.tracker-dot.past:hover { opacity:.7; }
 
 /* ── FOOTER ── */
 .foot { margin-top:44px; padding-top:24px; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; color:var(--ink-3); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
@@ -443,12 +452,15 @@ function expandLabel(subs) {
 
 /* ── BUILD TILE ── */
 function buildHabit(item) {
-  const done       = !!state[item.id];
-  const subs       = item.subs || [];
-  const isExpanded = expanded.has(item.id);
+  const done        = !!state[item.id];
+  const subs        = item.subs || [];
+  const isExpanded  = expanded.has(item.id);
+  const allSubsDone = subs.length === 0 || subs.every(s => !!state[s.id]);
+  const isDone      = done && allSubsDone;
+  const isPartial   = done && !allSubsDone;
 
   const div = document.createElement('div');
-  div.className = 'habit' + (done ? ' done' : '');
+  div.className = 'habit' + (isDone ? ' done' : '') + (isPartial ? ' partial' : '');
 
   /* meta line */
   let metaHTML = '';
@@ -528,8 +540,9 @@ function renderStats() {
 }
 
 function renderStreaks() {
-  const el   = document.getElementById('streaksEl');
-  const rows = ALL_PARENTS.map(i => ({i, s:calcStreak(i.id)})).sort((a,b)=>b.s-a.s);
+  const el      = document.getElementById('streaksEl');
+  const parents = weekendMode ? ALL_PARENTS.filter(p => !WEEKEND_HIDDEN.has(p.id)) : ALL_PARENTS;
+  const rows    = parents.map(i => ({i, s:calcStreak(i.id)})).sort((a,b)=>b.s-a.s);
   const max  = Math.max(...rows.map(r=>r.s), 1);
   el.innerHTML = rows.map(r=>`
     <div class="streak-row">
@@ -540,19 +553,30 @@ function renderStreaks() {
     </div>`).join('');
 }
 
-function renderWeekTracker() {
-  const el   = document.getElementById('weekTracker');
-  const days = getLast7Days();
+function toggleHistoryHabit(habitId, dayKey) {
   const hist = loadHistory();
-  hist[todayKey()] = state;
+  if (!hist[dayKey]) hist[dayKey] = {};
+  hist[dayKey][habitId] = !hist[dayKey][habitId];
+  localStorage.setItem(historyKey(), JSON.stringify(hist));
+  renderAll();
+}
 
-  const tracked = weekendMode ? TRACKED.filter(h => h.id !== 'm9') : TRACKED;
-  el.innerHTML = tracked.map(habit => {
+function renderWeekTracker() {
+  const el    = document.getElementById('weekTracker');
+  const days  = getLast7Days();
+  const hist  = loadHistory();
+  const today = todayKey();
+  hist[today] = state;
+
+  const habits = weekendMode ? ALL_PARENTS.filter(p => !WEEKEND_HIDDEN.has(p.id)) : ALL_PARENTS;
+  el.innerHTML = habits.map(habit => {
     const dots = days.map(day => {
-      const done = !!(hist[day.key]?.[habit.id]);
+      const done   = !!(hist[day.key]?.[habit.id]);
+      const isPast = day.key < today;
+      const click  = isPast ? ` onclick="toggleHistoryHabit('${habit.id}','${day.key}')"` : '';
       return `<div class="tracker-day">
         <div class="tracker-letter">${day.letter}</div>
-        <div class="tracker-dot${done ? ' done' : ''}"></div>
+        <div class="tracker-dot${done ? ' done' : ''}${isPast ? ' past' : ''}"${click}></div>
       </div>`;
     }).join('');
     return `<div class="tracker-row">
