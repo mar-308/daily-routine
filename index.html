@@ -111,7 +111,7 @@ body {
 }
 .habit:hover { transform:translateY(-2px); border-color:var(--soft); box-shadow:var(--shadow); }
 .habit.done    { background:var(--accent); color:var(--bg); border-color:var(--accent); }
-.habit.partial { background:#C4A97E; border-color:#C4A97E; }
+.habit.partial { background:#B8B0A8; border-color:#B8B0A8; }
 .habit.partial .habit-meta { color:rgba(28,27,25,.5); }
 .habit.partial .time-chip  { color:rgba(28,27,25,.65); }
 .habit.partial .habit-check { background:rgba(255,255,255,.4); border-color:rgba(255,255,255,.5); }
@@ -542,7 +542,7 @@ function renderStats() {
 function renderStreaks() {
   const el      = document.getElementById('streaksEl');
   const parents = weekendMode ? ALL_PARENTS.filter(p => !WEEKEND_HIDDEN.has(p.id)) : ALL_PARENTS;
-  const rows    = parents.map(i => ({i, s:calcStreak(i.id)})).sort((a,b)=>b.s-a.s);
+  const rows    = parents.map(i => ({i, s:calcStreak(i.id)}));
   const max  = Math.max(...rows.map(r=>r.s), 1);
   el.innerHTML = rows.map(r=>`
     <div class="streak-row">
@@ -568,8 +568,8 @@ function renderWeekTracker() {
   const today = todayKey();
   hist[today] = state;
 
-  const habits = weekendMode ? ALL_PARENTS.filter(p => !WEEKEND_HIDDEN.has(p.id)) : ALL_PARENTS;
-  el.innerHTML = habits.map(habit => {
+  const tracked = weekendMode ? TRACKED.filter(h => h.id !== 'm9') : TRACKED;
+  el.innerHTML = tracked.map(habit => {
     const dots = days.map(day => {
       const done   = !!(hist[day.key]?.[habit.id]);
       const isPast = day.key < today;
