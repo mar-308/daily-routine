@@ -410,7 +410,12 @@ function saveState()  {
 }
 
 function weekendKey()      { return `routine-weekend-${todayKey()}`; }
-function loadWeekendMode() { return localStorage.getItem(weekendKey()) === 'true'; }
+function loadWeekendMode() {
+  const stored = localStorage.getItem(weekendKey());
+  if (stored !== null) return stored === 'true';
+  const day = new Date().getDay();
+  return day === 0 || day === 6;
+}
 function saveWeekendMode(v){ localStorage.setItem(weekendKey(), String(v)); }
 
 let state      = loadState();
