@@ -317,7 +317,7 @@ body {
 
   <div class="foot">
     <span id="footLabel"></span>
-    <button class="reset-link" onclick="resetDay()">Reset today</button>
+    <button class="reset-link" id="weekendBtn" onclick="toggleWeekendMode()">Weekend</button>
   </div>
 
 </div>
@@ -379,6 +379,8 @@ const TRACKED = [
   { id:'n6', name:'Skincare',          emoji:'🧴' },
 ];
 
+const WEEKEND_HIDDEN = new Set(['m9', 'm10']);
+
 const ALL_PARENTS = [...MORNING, ...NIGHT];
 const ALL_SUBS    = ALL_PARENTS.flatMap(p => p.subs || []);
 const ALL_ITEMS   = [...ALL_PARENTS, ...ALL_SUBS];
@@ -394,8 +396,13 @@ function saveState()  {
   const h = loadHistory(); h[todayKey()] = state; localStorage.setItem(historyKey(), JSON.stringify(h));
 }
 
-let state    = loadState();
-let expanded = new Set();
+function weekendKey()      { return `routine-weekend-${todayKey()}`; }
+function loadWeekendMode() { return localStorage.getItem(weekendKey()) === 'true'; }
+function saveWeekendMode(v){ localStorage.setItem(weekendKey(), String(v)); }
+
+let state      = loadState();
+let expanded   = new Set();
+let weekendMode = loadWeekendMode();
 
 /* ── HELPERS ── */
 function getLast7Days() {
@@ -491,7 +498,7 @@ function toggleExpand(id, e) {
   if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
   renderAll();
 }
-function resetDay() { state={}; saveState(); renderAll(); }
+function toggleWeekendMode() { weekendMode = !weekendMode; saveWeekendMode(weekendMode); renderAll(); }
 
 /* ── RENDER ── */
 function renderChecklist(items, elId) {
@@ -499,9 +506,17 @@ function renderChecklist(items, elId) {
   items.forEach(i => el.appendChild(buildHabit(i)));
 }
 
+function visibleItems() {
+  if (!weekendMode) return ALL_ITEMS;
+  const parents = ALL_PARENTS.filter(p => !WEEKEND_HIDDEN.has(p.id));
+  const subs    = parents.flatMap(p => p.subs || []);
+  return [...parents, ...subs];
+}
+
 function renderStats() {
-  const total = ALL_ITEMS.length;
-  const done  = ALL_ITEMS.filter(i => state[i.id]).length;
+  const items = visibleItems();
+  const total = items.length;
+  const done  = items.filter(i => state[i.id]).length;
   const pct   = Math.round(done/total*100);
   const C     = 326.7;
 
@@ -548,11 +563,13 @@ function renderWeekTracker() {
 }
 
 function renderAll() {
-  renderChecklist(MORNING, 'morningChecklist');
+  const morning = weekendMode ? MORNING.filter(h => !WEEKEND_HIDDEN.has(h.id)) : MORNING;
+  renderChecklist(morning, 'morningChecklist');
   renderChecklist(NIGHT,   'nightChecklist');
   renderStats();
   renderStreaks();
   renderWeekTracker();
+  document.getElementById('weekendBtn').textContent = weekendMode ? 'Weekday' : 'Weekend';
 }
 
 /* ── INIT ── */
