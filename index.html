@@ -446,7 +446,6 @@ function buildHabit(item) {
   const done       = !!state[item.id];
   const subs       = item.subs || [];
   const isExpanded = expanded.has(item.id);
-  const streak     = calcStreak(item.id);
 
   const div = document.createElement('div');
   div.className = 'habit' + (done ? ' done' : '');
@@ -454,7 +453,6 @@ function buildHabit(item) {
   /* meta line */
   let metaHTML = '';
   if (item.time) metaHTML += `<span class="time-chip">${item.time}</span>`;
-  else           metaHTML += `<span class="flame">✦</span> ${streak} day${streak===1?'':'s'}`;
 
   /* sub-items html */
   let subsHTML = '';
@@ -548,7 +546,8 @@ function renderWeekTracker() {
   const hist = loadHistory();
   hist[todayKey()] = state;
 
-  el.innerHTML = TRACKED.map(habit => {
+  const tracked = weekendMode ? TRACKED.filter(h => h.id !== 'm9') : TRACKED;
+  el.innerHTML = tracked.map(habit => {
     const dots = days.map(day => {
       const done = !!(hist[day.key]?.[habit.id]);
       return `<div class="tracker-day">
