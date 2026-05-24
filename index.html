@@ -143,15 +143,15 @@ body {
 }
 .habit-expand {
   display:flex; align-items:center; gap:4px; flex-shrink:0;
-  padding:3px 8px; border-radius:999px;
-  border:1px solid var(--line); background:var(--bg-soft);
-  font-size:11px; color:var(--ink-2);
-  cursor:pointer; transition:color .15s, background .15s, border-color .15s;
+  padding:2px 7px; border-radius:999px;
+  border:1px solid rgba(0,0,0,.08); background:transparent;
+  font-size:10.5px; color:var(--ink-3);
+  cursor:pointer; transition:color .15s, background .15s;
   -webkit-tap-highlight-color:transparent;
 }
-.habit-expand:hover { background:var(--soft); border-color:var(--soft); color:var(--ink); }
-.habit.done .habit-expand { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.15); color:rgba(245,242,235,.55); }
-.habit.done .habit-expand:hover { background:rgba(255,255,255,.18); color:rgba(245,242,235,.8); }
+.habit-expand:hover { background:rgba(0,0,0,.04); color:var(--ink-2); }
+.habit.done .habit-expand { border-color:rgba(255,255,255,.15); color:rgba(245,242,235,.4); }
+.habit.done .habit-expand:hover { background:rgba(255,255,255,.1); color:rgba(245,242,235,.7); }
 .expand-arrow { font-size:9px; }
 
 /* ── SUB-ITEMS ── */
