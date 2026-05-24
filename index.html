@@ -292,7 +292,7 @@ body {
   <div class="section">
     <div class="section-head">
       <h2 class="section-title">Morning <em>routine</em></h2>
-      <span class="section-hint">be the sun.</span>
+      <span class="section-hint">be the sun. · double-tap to complete all</span>
     </div>
     <div class="checklist" id="morningChecklist"></div>
   </div>
@@ -501,13 +501,34 @@ function buildHabit(item) {
     <div class="habit-meta">${metaHTML}</div>
     ${subsHTML}`;
 
-  div.addEventListener('click', () => toggle(item.id));
+  /* single vs double-click: wait 260ms to decide */
+  let _clickTimer = null;
+  div.addEventListener('click', () => {
+    if (_clickTimer) {
+      clearTimeout(_clickTimer);
+      _clickTimer = null;
+      markAllDone(item.id);        /* double-tap → mark all done + collapse */
+    } else {
+      _clickTimer = setTimeout(() => {
+        _clickTimer = null;
+        toggle(item.id);           /* single tap → normal toggle */
+      }, 260);
+    }
+  });
   return div;
 }
 
 /* ── INTERACTIONS ── */
 function toggle(id) {
   state[id] = !state[id]; saveState(); renderAll();
+}
+function markAllDone(id) {
+  const parent = ALL_PARENTS.find(p => p.id === id);
+  if (!parent) return;
+  state[id] = true;                            /* mark parent done  */
+  (parent.subs || []).forEach(s => { state[s.id] = true; }); /* mark all subs done */
+  expanded.delete(id);                         /* collapse dropdown */
+  saveState(); renderAll();
 }
 function toggleSub(id, e) {
   e.stopPropagation(); state[id] = !state[id]; saveState(); renderAll();
