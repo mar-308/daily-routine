@@ -138,17 +138,19 @@ body {
 .habit.done .time-chip { color:rgba(245,242,235,.6); }
 
 /* ── EXPAND TOGGLE ── */
+.habit-bottom {
+  display:flex; align-items:center; justify-content:space-between; margin-top:6px;
+}
 .habit-expand {
-  display:flex; align-items:center; gap:5px;
-  margin-top:12px; padding-top:10px;
-  border-top:1px solid var(--line-2);
-  font-size:10.5px; color:var(--ink-3);
-  cursor:pointer; transition:color .15s;
+  display:flex; align-items:center; justify-content:center;
+  width:22px; height:22px; border-radius:50%; flex-shrink:0;
+  font-size:11px; color:var(--ink-3);
+  cursor:pointer; transition:color .15s, background .15s;
   -webkit-tap-highlight-color:transparent;
 }
-.habit-expand:hover { color:var(--ink-2); }
-.habit.done .habit-expand { border-top-color:rgba(255,255,255,.12); color:rgba(245,242,235,.4); }
-.habit.done .habit-expand:hover { color:rgba(245,242,235,.65); }
+.habit-expand:hover { color:var(--ink-2); background:rgba(0,0,0,.05); }
+.habit.done .habit-expand { color:rgba(245,242,235,.4); }
+.habit.done .habit-expand:hover { color:rgba(245,242,235,.65); background:rgba(255,255,255,.1); }
 .expand-arrow { font-size:9px; }
 
 /* ── SUB-ITEMS ── */
@@ -472,7 +474,8 @@ function buildHabit(item) {
   if (item.time) metaHTML += `<span class="time-chip">${item.time}</span>`;
 
   /* sub-items html */
-  let subsHTML = '';
+  let expandBtn = '';
+  let subsPanel = '';
   if (subs.length) {
     const subRows = subs.map(s => {
       const sd = !!state[s.id];
@@ -484,12 +487,10 @@ function buildHabit(item) {
         </div>`;
     }).join('');
 
-    subsHTML = `
-      <div class="habit-expand" onclick="toggleExpand('${item.id}',event)">
-        <span class="expand-arrow">${isExpanded?'▾':'▸'}</span>
-        <span>${isExpanded ? 'collapse' : expandLabel(subs)}</span>
-      </div>
-      <div class="habit-subs" style="display:${isExpanded?'block':'none'}">${subRows}</div>`;
+    expandBtn = `<div class="habit-expand" onclick="toggleExpand('${item.id}',event)">
+      <span class="expand-arrow">${isExpanded?'▾':'▸'}</span>
+    </div>`;
+    subsPanel = `<div class="habit-subs" style="display:${isExpanded?'block':'none'}">${subRows}</div>`;
   }
 
   div.innerHTML = `
@@ -498,8 +499,11 @@ function buildHabit(item) {
       <span class="habit-check">${checkSVG()}</span>
     </div>
     <div class="habit-label">${item.name}</div>
-    <div class="habit-meta">${metaHTML}</div>
-    ${subsHTML}`;
+    <div class="habit-bottom">
+      <div class="habit-meta">${metaHTML}</div>
+      ${expandBtn}
+    </div>
+    ${subsPanel}`;
 
   /* single vs double-click: wait 260ms to decide */
   let _clickTimer = null;
