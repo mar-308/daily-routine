@@ -543,7 +543,7 @@ function renderWeekTracker() {
   const today = todayKey();
   hist[today] = state;
 
-  const tracked = weekendMode ? TRACKED.filter(h => h.id !== 'm9') : TRACKED;
+  const tracked = weekendMode ? TRACKED.filter(h => h.id !== 'm9' && h.id !== 'm10') : TRACKED;
   el.innerHTML = tracked.map(habit => {
     const dots = days.map(day => {
       const done   = !!(hist[day.key]?.[habit.id]);
