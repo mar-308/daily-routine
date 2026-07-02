@@ -202,22 +202,6 @@ body {
 .sub-row.sub-done .sub-ck { display:block; }
 .habit.done .sub-row.sub-done .sub-ck { border-color:var(--accent); }
 
-/* ── STREAKS ── */
-.card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:26px 28px; }
-.card-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; }
-.card-title { font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:-.005em; }
-.card-title em { font-style:italic; color:var(--ink-2); font-weight:400; }
-.card-sub { font-size:11px; color:var(--ink-3); letter-spacing:.08em; text-transform:uppercase; }
-.streaks { display:grid; grid-template-columns:repeat(2,1fr); column-gap:36px; }
-.streak-row { display:grid; grid-template-columns:26px 1fr 1.1fr 70px; align-items:center; padding:14px 0; border-top:1px solid var(--line-2); gap:18px; }
-.streak-row:first-child,.streak-row:nth-child(2) { border-top:none; padding-top:6px; }
-.streak-emoji { font-size:17px; }
-.streak-name  { font-size:13.5px; font-weight:500; }
-.streak-bar   { position:relative; height:5px; background:var(--line-2); border-radius:3px; overflow:hidden; }
-.streak-bar-fill { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,var(--accent),#4B4843); border-radius:3px; transition:width 1s cubic-bezier(.4,0,.2,1); }
-.streak-number { font-family:var(--serif); font-size:24px; text-align:right; letter-spacing:-.01em; line-height:1; }
-.streak-number small { font-family:var(--sans); font-size:10px; color:var(--ink-3); letter-spacing:.12em; text-transform:uppercase; margin-left:3px; font-weight:500; }
-
 /* ── WEEK TRACKER ── */
 .tracker-row {
   display:flex; align-items:center; justify-content:space-between;
@@ -309,16 +293,6 @@ body {
   </div>
 
   <div class="section">
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title">Streaks, <em>by habit</em></div>
-        <div class="card-sub" id="streakMonth"></div>
-      </div>
-      <div class="streaks" id="streaksEl"></div>
-    </div>
-  </div>
-
-  <div class="section">
     <div class="section-head">
       <h2 class="section-title">Weekly <em>tracker</em></h2>
     </div>
@@ -358,20 +332,10 @@ const MORNING = [
 ];
 
 const NIGHT = [
-  { id:'n0', name:'Mindfulness', emoji:'🧘‍♀️' },
-  { id:'n1', name:'Feed Benji', emoji:'🐶' },  /* standalone — no toggle */
-  { id:'n2', name:'Draw Bath',  time:'9:00', emoji:'🛁',
-    subs:[
-      {id:'n3', name:'Leave workout clothes ready', emoji:'👟'},
-      {id:'n4', name:'Remove makeup',               emoji:'🌸'},
-    ]
-  },
-  { id:'n5', name:'Take Bath', time:'9:20', emoji:'🫧',
-    subs:[
-      {id:'n6', name:'Skincare',      emoji:'🧴'},
-      {id:'n7', name:'Rosacea Pills', emoji:'💊'},
-    ]
-  },
+  { id:'n1', name:'Feed Benji',   emoji:'🐶' },
+  { id:'n2', name:'Skincare',     emoji:'🧴' },
+  { id:'n3', name:'Brush Teeth',  emoji:'🤍' },
+  { id:'n4', name:'Night Pills',  emoji:'💊' },
 ];
 
 const QUOTES = [
@@ -389,23 +353,20 @@ const QUOTES = [
 ];
 
 const TRACKED = [
-  { id:'m1', name:'Wake Up & Pray',    emoji:'🙏' },
-  { id:'m2', name:'Vitamins',          emoji:'💊' },
-  { id:'m4', name:'Feed Benji',        emoji:'🐶' },
-  { id:'m5', name:'Coffee',            emoji:'☕' },
-  { id:'m7', name:'Get Ready',         emoji:'✨' },
-  { id:'m9', name:'Workout',           emoji:'💪' },
-  { id:'m6', name:'Journaling',        emoji:'📓' },
-  { id:'n1', name:'Feed Benji (night)',emoji:'🐶' },
-  { id:'n7', name:'Rosacea Pills',     emoji:'💊' },
-  { id:'n6', name:'Skincare',          emoji:'🧴' },
+  { id:'m1',  name:'Wake Up & Pray', emoji:'🙏' },
+  { id:'m2',  name:'Vitamins',       emoji:'💊' },
+  { id:'m3',  name:'Go Downstairs',  emoji:'🌅' },
+  { id:'m7',  name:'Get Ready',      emoji:'✨' },
+  { id:'m9',  name:'Gym',            emoji:'💪' },
+  { id:'m10', name:'Walk & Slack',   emoji:'📱' },
+  { id:'n1',  name:'Feed Benji',     emoji:'🐶' },
+  { id:'n2',  name:'Skincare',       emoji:'🧴' },
+  { id:'n3',  name:'Brush Teeth',    emoji:'🤍' },
+  { id:'n4',  name:'Night Pills',    emoji:'💊' },
 ];
 
-const WEEKEND_HIDDEN = new Set(['m9', 'm10', 'n2', 'n5']);
-const WEEKEND_NIGHT_EXTRAS = [
-  { id:'n6', name:'Skincare',      emoji:'🧴' },
-  { id:'n7', name:'Rosacea Pills', emoji:'💊' },
-];
+const WEEKEND_HIDDEN = new Set(['m9', 'm10']);
+const WEEKEND_NIGHT_EXTRAS = [];
 
 const ALL_PARENTS = [...MORNING, ...NIGHT];
 const ALL_SUBS    = ALL_PARENTS.flatMap(p => p.subs || []);
@@ -426,8 +387,7 @@ function weekendKey()      { return `routine-weekend-${todayKey()}`; }
 function loadWeekendMode() {
   const stored = localStorage.getItem(weekendKey());
   if (stored !== null) return stored === 'true';
-  const day = new Date().getDay();
-  return day === 0 || day === 6;
+  return true;
 }
 function saveWeekendMode(v){ localStorage.setItem(weekendKey(), String(v)); }
 
@@ -446,18 +406,6 @@ function getLast7Days() {
     days.push({ key, letter: ['M','T','W','T','F','S','S'][i] });
   }
   return days;
-}
-
-/* ── STREAK ── */
-function calcStreak(id) {
-  if (!state[id]) return 0;
-  const hist = loadHistory(); let s = 1;
-  const d = new Date(); d.setDate(d.getDate()-1);
-  for (let i=0; i<365; i++) {
-    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    if (hist[k]?.[id]) { s++; d.setDate(d.getDate()-1); } else break;
-  }
-  return s;
 }
 
 /* ── HELPERS ── */
@@ -580,20 +528,6 @@ function renderStats() {
   document.getElementById('ringDetail').textContent = `${done} of ${total}`;
 }
 
-function renderStreaks() {
-  const el      = document.getElementById('streaksEl');
-  const parents = weekendMode ? ALL_PARENTS.filter(p => !WEEKEND_HIDDEN.has(p.id)) : ALL_PARENTS;
-  const rows    = parents.map(i => ({i, s:calcStreak(i.id)}));
-  const max  = Math.max(...rows.map(r=>r.s), 1);
-  el.innerHTML = rows.map(r=>`
-    <div class="streak-row">
-      <span class="streak-emoji">${r.i.emoji}</span>
-      <span class="streak-name">${r.i.name}</span>
-      <div class="streak-bar"><div class="streak-bar-fill" style="width:${(r.s/max)*100}%"></div></div>
-      <div class="streak-number">${r.s}<small>days</small></div>
-    </div>`).join('');
-}
-
 function toggleHistoryHabit(habitId, dayKey) {
   const hist = loadHistory();
   if (!hist[dayKey]) hist[dayKey] = {};
@@ -638,7 +572,6 @@ function renderAll() {
   renderChecklist(morning, 'morningChecklist');
   renderChecklist(night,   'nightChecklist');
   renderStats();
-  renderStreaks();
   renderWeekTracker();
   document.getElementById('weekendBtn').textContent = weekendMode ? 'Weekday' : 'Weekend';
 }
@@ -651,7 +584,6 @@ function setDates() {
   const str    = `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
   document.getElementById('heroDate').textContent  = str;
   document.getElementById('footLabel').textContent = `Daily Routine · ${str}`;
-  document.getElementById('streakMonth').textContent = months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
 function setQuote() {
