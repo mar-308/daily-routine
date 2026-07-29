@@ -158,14 +158,17 @@ body {
 .habit-subs { margin-top:8px; }
 .sub-row {
   display:flex; align-items:center; gap:9px;
-  padding:7px 0;
+  padding:7px 8px;
+  margin:0 -8px;
   border-top:1px solid rgba(0,0,0,.05);
+  border-radius:8px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:opacity .15s;
+  transition:opacity .15s, background .2s;
 }
 .sub-row:first-child { border-top:none; }
 .habit.done .sub-row { border-top-color:rgba(255,255,255,.08); }
+.sub-row.sub-done { background:var(--soft); }
 
 .sub-emoji-sm {
   font-size:13px; width:24px; height:24px; border-radius:6px;
@@ -315,7 +318,7 @@ const MORNING = [
   { id:'m3', name:'Go Downstairs',  time:'7:00', emoji:'🌅',
     subs:[
       {id:'m4', name:'Benji',  emoji:'🐶'},
-      {id:'m5', name:'Coffee', emoji:'☕'},
+      {id:'m5', name:'Breakfast', emoji:'🥯'},
     ]
   },
   { id:'m7',  name:'Get Ready',    time:'7:10', emoji:'✨',
@@ -333,9 +336,9 @@ const MORNING = [
 
 const NIGHT = [
   { id:'n1', name:'Feed Benji',   emoji:'🐶' },
+  { id:'n4', name:'Vitamins',     emoji:'💊' },
   { id:'n2', name:'Skincare',     emoji:'🧴' },
   { id:'n3', name:'Brush Teeth',  emoji:'🤍' },
-  { id:'n4', name:'Vitamins',     emoji:'💊' },
 ];
 
 const QUOTES = [
@@ -360,9 +363,9 @@ const TRACKED = [
   { id:'m9',  name:'Gym',            emoji:'💪' },
   { id:'m10', name:'Walk & Slack',   emoji:'📱' },
   { id:'n1',  name:'Feed Benji',     emoji:'🐶' },
+  { id:'n4',  name:'Vitamins',       emoji:'💊' },
   { id:'n2',  name:'Skincare',       emoji:'🧴' },
   { id:'n3',  name:'Brush Teeth',    emoji:'🤍' },
-  { id:'n4',  name:'Vitamins',       emoji:'💊' },
 ];
 
 const WEEKEND_HIDDEN = new Set(['m9', 'm10']);
