@@ -288,6 +288,14 @@ body {
 
   <div class="section">
     <div class="section-head">
+      <h2 class="section-title">Prenatal <em>routine</em></h2>
+      <span class="section-hint">for the two of you.</span>
+    </div>
+    <div class="checklist" id="prenatalChecklist"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
       <h2 class="section-title">Night <em>routine</em></h2>
       <span class="section-hint">wind down.</span>
     </div>
@@ -313,7 +321,7 @@ body {
 /* ── DATA ── */
 const MORNING = [
   { id:'m1', name:'Wake Up & Pray', time:'6:30', emoji:'🙏' },
-  { id:'m2', name:'Morning Pills',  time:'6:50', emoji:'💊' },
+  { id:'m2', name:'Metformin',      time:'6:50', emoji:'⚡️' },
   { id:'m3', name:'Go Downstairs',  time:'7:00', emoji:'🌅',
     subs:[
       {id:'m4', name:'Benji',  emoji:'🐶'},
@@ -335,9 +343,14 @@ const MORNING = [
 
 const NIGHT = [
   { id:'n1', name:'Feed Benji',   emoji:'🐶' },
-  { id:'n4', name:'Vitamins',     emoji:'💊' },
+  { id:'n4', name:'Metformin',    emoji:'⚡️' },
   { id:'n2', name:'Skincare',     emoji:'🧴' },
   { id:'n3', name:'Brush Teeth',  emoji:'🤍' },
+];
+
+const PRENATAL = [
+  { id:'p1', name:'Vitamins', emoji:'🌸' },
+  { id:'p2', name:'Aspirin',  emoji:'☁️' },
 ];
 
 const QUOTES = [
@@ -356,13 +369,15 @@ const QUOTES = [
 
 const TRACKED = [
   { id:'m1',  name:'Wake Up & Pray', emoji:'🙏' },
-  { id:'m2',  name:'Morning Pills',  emoji:'💊' },
+  { id:'m2',  name:'Metformin',      emoji:'⚡️' },
   { id:'m3',  name:'Go Downstairs',  emoji:'🌅' },
   { id:'m7',  name:'Get Ready',      emoji:'✨' },
   { id:'m9',  name:'Gym',            emoji:'💪' },
   { id:'m10', name:'Walk & Slack',   emoji:'📱' },
+  { id:'p1',  name:'Vitamins',       emoji:'🌸' },
+  { id:'p2',  name:'Aspirin',        emoji:'☁️' },
   { id:'n1',  name:'Feed Benji',     emoji:'🐶' },
-  { id:'n4',  name:'Vitamins',       emoji:'💊' },
+  { id:'n4',  name:'Metformin',      emoji:'⚡️' },
   { id:'n2',  name:'Skincare',       emoji:'🧴' },
   { id:'n3',  name:'Brush Teeth',    emoji:'🤍' },
 ];
@@ -370,7 +385,7 @@ const TRACKED = [
 const WEEKEND_HIDDEN = new Set(['m9', 'm10']);
 const WEEKEND_NIGHT_EXTRAS = [];
 
-const ALL_PARENTS = [...MORNING, ...NIGHT];
+const ALL_PARENTS = [...MORNING, ...PRENATAL, ...NIGHT];
 const ALL_SUBS    = ALL_PARENTS.flatMap(p => p.subs || []);
 const ALL_ITEMS   = [...ALL_PARENTS, ...ALL_SUBS];
 
@@ -497,7 +512,14 @@ function markAllDone(id) {
   saveState(); renderAll();
 }
 function toggleSub(id, e) {
-  e.stopPropagation(); state[id] = !state[id]; saveState(); renderAll();
+  e.stopPropagation();
+  state[id] = !state[id];
+  const parent = ALL_PARENTS.find(p => (p.subs || []).some(s => s.id === id));
+  if (parent && parent.subs.every(s => !!state[s.id])) {
+    state[parent.id] = true;    /* last sub checked → act like a double-tap */
+    expanded.delete(parent.id); /* collapse dropdown */
+  }
+  saveState(); renderAll();
 }
 function toggleExpand(id, e) {
   e.stopPropagation();
@@ -572,8 +594,9 @@ function renderAll() {
   const night   = weekendMode
     ? [...NIGHT.filter(h => !WEEKEND_HIDDEN.has(h.id)), ...WEEKEND_NIGHT_EXTRAS]
     : NIGHT;
-  renderChecklist(morning, 'morningChecklist');
-  renderChecklist(night,   'nightChecklist');
+  renderChecklist(morning,  'morningChecklist');
+  renderChecklist(PRENATAL, 'prenatalChecklist');
+  renderChecklist(night,    'nightChecklist');
   renderStats();
   renderWeekTracker();
   document.getElementById('weekendBtn').textContent = weekendMode ? 'Weekday' : 'Weekend';
