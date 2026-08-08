@@ -168,7 +168,6 @@ body {
 }
 .sub-row:first-child { border-top:none; }
 .habit.done .sub-row { border-top-color:rgba(255,255,255,.08); }
-.sub-row.sub-done { background:var(--soft); }
 
 .sub-emoji-sm {
   font-size:13px; width:24px; height:24px; border-radius:6px;
@@ -424,9 +423,10 @@ function buildHabit(item) {
   const done        = !!state[item.id];
   const subs        = item.subs || [];
   const isExpanded  = expanded.has(item.id);
+  const anySubDone  = subs.some(s => !!state[s.id]);
   const allSubsDone = subs.length === 0 || subs.every(s => !!state[s.id]);
   const isDone      = done && allSubsDone;
-  const isPartial   = done && !allSubsDone;
+  const isPartial   = (done || anySubDone) && !allSubsDone;
 
   const div = document.createElement('div');
   div.className = 'habit' + (isDone ? ' done' : '') + (isPartial ? ' partial' : '');
